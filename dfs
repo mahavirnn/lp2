@@ -1,0 +1,144 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph
+{
+    private:
+        int vertices,edges;
+        vector<bool>v;
+        vector<vector<int>>g;
+    public:
+        void input()
+        {
+            cout<<"Enter the total vertices and total edges:- "<<endl;
+            cin>>vertices>>edges;
+            v.assign(vertices,false);
+            g.assign(vertices,vector<int>());
+            int start_ver,end_ver;
+            for(int i=0;i<edges;i++)
+            {
+                cout<<"Enter the starting and ending vertex of the edge "<<i+1<<":-";
+                cin>>start_ver>>end_ver;
+                edge(start_ver,end_ver);
+                edge(end_ver,start_ver);
+            }
+        }  
+        void edge(int vertices,int m)
+        {
+            g[vertices].push_back(m);
+           // g[m].push_back(n);
+        }
+        void display()
+        {
+            for(int i=0;i<g.size();i++)
+            {   
+                cout<<i<<" -> ";
+                for(int j=0;j<g[i].size();j++)
+                {
+                    cout<<g[i][j]<<","<<" ";
+                }
+                cout<<endl;
+            }
+        }
+
+        void BFS(int ele)
+        {
+            queue<int> q;
+            q.push(ele);
+            v[ele]=true;
+            while(!q.empty())
+            {
+                int f=q.front();
+                q.pop();
+                cout<<f<<" ";
+                for (auto i = g[f].begin(); i != g[f].end(); i++) {
+                    if (!v[*i]) {
+                        q.push(*i);
+                        v[*i] = true;
+                    }
+                }
+            }
+            cout<<endl;
+        }
+
+        void BFS()
+        {
+            cout<<"BFS traversal is:- ";
+            for(int i=0;i<vertices;i++)
+            {
+                if(!v[i])
+                {
+                    BFS(i);
+                }
+            }
+            for(int i=0;i<v.size();i++)
+            {
+                v[i]=false;
+            }
+        }
+
+        void DFS(int ele1)
+        {
+            if(!v[ele1])
+            {
+                v[ele1]=true;
+                cout<<ele1<<" ";
+                for (auto i = g[ele1].begin(); i!=g[ele1].end(); ++i)
+                {
+                    if (!v[*i])
+                    {
+                        DFS(*i);
+                    }
+                }
+            }
+            else
+            {
+                cout<<"\nVetex "<<ele1<<" is visited already."<<endl;
+            }
+            cout<<endl;
+        }
+
+        void DFS()
+        {
+            cout<<"\nEnter starting vertex for DFS traversal:-";
+            int dver;
+            cin>>dver;
+            cout<<"\nDFS traversal is:- ";
+            DFS(dver);
+        }
+};
+
+int main()
+{
+    Graph g;
+    int options;
+    do
+    {
+        cout<<"-------------------------MENU---------------------------"<<endl;
+        cout<<"1.Create Graph "<<endl;
+        cout<<"2.Display"<<endl;
+        cout<<"3.BFS"<<endl;
+        cout<<"4.DFS"<<endl;
+        cout<<"5.Exit"<<endl;
+        cout<<"Enter the option:- ";
+        cin>>options;
+        switch(options)
+        {
+            case 1:
+                g.input();
+                break;
+            case 2:
+                g.display();
+                break;
+            case 3:
+                g.BFS();
+                break;
+            case 4:
+                g.DFS();
+                break;
+            case 5:
+                exit(0);
+        }
+    }while(options>=1 && options<=4);
+    return 0;
+}
