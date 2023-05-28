@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df["Age"].fillna(df["Age"].mean(),inplace=True)
+
+sns.countplot(df["Sex"])
+
+sns.boxplot(df["Age"])
+
+sns.catplot(x="Pclass",y="Age",data=df,kind="box")
+
+sns.catplot(x="Pclass",y="Age",data=df,kind="strip")
+
+sns.scatterplot(x="Age",y="Fare",hue="Survived",data=df)
+
+sns.scatterplot(x="Pclass",y="Fare",data=df)
+
+sns.distplot(df["Fare"])
+
+ sns.histplot(df["Fare"])
+ 
+sns.catplot(x="Pclass",y="Age",data=df,kind="bar")
+
+sns.jointplot(df["Age"],df["Fare"])
+
+tc = df.corr()
+sns.heatmap(tc)
+
+sns.pairplot(df)
+
+sns.violinplot(x="Pclass",y="Age",data=df)
+
+sns.swarmplot(x="Survived",y="Age",data=df)
+
+sns.boxplot(df['Sex'], df["Age"], df["Survived"], palette = 'Set2')
+plt.show()
+
+sns.histplot(x = df['SepalLengthCm'], kde=True)
+
