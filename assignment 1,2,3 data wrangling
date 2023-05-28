@@ -1,0 +1,96 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv("Student_Marks.csv")
+df
+df.shape
+df.describe()
+df["Marks"].dtype
+df["Marks"].min()
+df["Marks"].max()
+df["Marks"].std()
+df["Institute"].unique()
+df["number_courses"].unique()
+df["number_courses"].value_counts()
+df.isnull()
+df["number_courses"].fillna(value=df["number_courses"].mean(),inplace=True)
+df["time_study"].fillna(value=df["time_study"].mean(),inplace=True)
+df.isnull()
+dummies = pd.get_dummies(df.Institute)
+merged = pd.concat([df,dummies],axis="columns")
+merged = merged.drop(["Institute"],axis="columns")
+pd.to_numeric(merged.Marks,downcast="signed")
+(merged["Marks"].values=="").sum()
+dummies2 = df.copy()
+dummies2["Institute"].replace(["A","B","C"],[0,1,2],inplace=True)
+df.plot.bar()
+def fill_null(dataframe,numcol):
+    dataframe[numcol].fillna(dataframe[numcol].mean(),inplace=True)
+cols = df.iloc[0:,4:]
+for col in cols:
+    fill_null(df,col)
+for col in cols:
+    sns.boxplot(df[col])
+    plt.show(block=True)
+q1 = np.percentile(df["Phy_marks"],25,interpolation='midpoint')
+q3 = np.percentile(df["Phy_marks"],75,interpolation='midpoint')
+iqr = q3-q1
+
+phyupper = np.where(df["Phy_marks"]>=(q3+1.5*iqr))
+phylower = np.where(df["Phy_marks"]<=(q1-1.5*iqr))
+print("Phy_marks",phylower[0],phyupper[0])
+df.drop(ppslower[0],inplace=True)
+mean = np.mean(df["Che_marks"])
+std = np.std(df["Che_marks"])
+threshold = -2
+outliers = []
+for i in df["Che_marks"]:
+    z = (i-mean)/std
+    if z<threshold:
+        outliers.append(i)
+
+print(outliers)
+
+df_minmax = df.copy()
+df_minmax = df_minmax.iloc[0:,4:]
+
+df_minmax
+
+df_z = df.copy()
+df_z = df_z.iloc[0:,4:]
+
+df_z
+
+for col in df_z:
+    df_z[col] = (df_z[col]-df_z[col].mean())/df_z[col].std()
+    
+group = df.groupby("Species")
+
+virginica = group.get_group("Iris-virginica")
+
+def calc_mean(data):
+    return sum(data)/len(data)
+  
+import math
+def calc_std(data):
+    sm=0
+    for i in range(len(data)):
+      sm+=data[i]
+      mean = sm/len(data)
+        
+    deviation_sum = 0
+    for i in range(len(data)):
+      deviation_sum+=(data[i]- mean)**2
+      psd = math.sqrt((deviation_sum)/len(data))
+    
+    return psd
+    
+plt.scatter(df["Rollno"],df["Che_marks"])
+
+from collections import Counter
+def mode_calc(data):
+    c=Counter(data)
+    return[k for k,v in c.items() if v==c.most_common(1)[0][1]]
+    
+mode_calc(setosa['SepalWidthCm'])
