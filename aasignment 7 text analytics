@@ -1,0 +1,103 @@
+import nltk
+import pandas as pd
+import math
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+text = "Hello everyone. Welcome to DSBDA lab. You are studying text analysis."
+# text = pd.read_csv("https://raw.githubusercontent.com/hafidhfikri/Practice-Twitter-Sentiment-Analysis/master/train_E6oV3lV.csv")
+
+from nltk.tokenize import sent_tokenize,word_tokenize
+token_sent = sent_tokenize(text)
+token_sent
+
+# token_sent = sent_tokenize(text['tweet'][0])
+# token_sent
+
+token_word = word_tokenize(text)
+token_word
+
+from nltk.corpus import stopwords
+print(stopwords.words('english'))
+
+stop_words = set(stopwords.words("english"))
+stop_words
+
+filtered_sent = []
+
+for w in token_word:
+    if w.lower() not in stop_words:
+        filtered_sent.append(w)
+        
+print("Tokenized: ",token_word)
+print("Filtered: ",filtered_sent)
+
+from nltk.stem import PorterStemmer
+
+ps = PorterStemmer()
+stemmed = []
+
+for w in filtered_sent:
+    stemmed.append(ps.stem(w))
+
+print("Filtered: ",filtered_sent)
+print("Stemmed: ",stemmed)
+
+from nltk.stem.wordnet import WordNetLemmatizer
+
+lem = WordNetLemmatizer()
+lemmatized = []
+
+for w in filtered_sent:
+    lemmatized.append(lem.lemmatize(w))
+    
+print("Filtered: ",filtered_sent)
+print("Lemmatized: ",lemmatized)
+
+word = "flying"
+print("Stemmed: ",ps.stem(word))
+print("Lemmatized: ",lem.lemmatize(word,"v"))
+
+word = "corpora"
+print("Stemmed: ",ps.stem(word))
+print("Lemmatized: ",lem.lemmatize(word))
+
+nltk.pos_tag(token_word)
+
+first_sentence = "Data Science is the hardest job of the 21st century"
+second_sentence = "machine learning is the key for data science"
+
+first_sentence = first_sentence.split(" ")
+second_sentence = second_sentence.split(" ")
+
+total= set(first_sentence).union(set(second_sentence))
+print(total)
+
+wordDictA = dict.fromkeys(total, 0) 
+wordDictB = dict.fromkeys(total, 0)
+for word in first_sentence:
+    wordDictA[word]+=1
+    
+for word in second_sentence:
+    wordDictB[word]+=1
+    
+print(wordDictA)
+print(wordDictB)
+
+pd.DataFrame([wordDictA, wordDictB])
+
+def computeTF(wordDict, doc):
+    tfDict = {}
+    corpusCount = len(doc)
+    for word, count in wordDict.items():
+        tfDict[word] = count/float(corpusCount)
+    return(tfDict)
+    
+tfFirst = computeTF(wordDictA, first_sentence)
+tfSecond = computeTF(wordDictB, second_sentence)
+
+tf = pd.DataFrame([tfFirst, tfSecond])
+print(tf)
+
