@@ -1,0 +1,29 @@
+ls
+mkdir
+cat
+put
+
+//Commands:
+// to check if hadoop is running
+jps
+stop-all.sh
+jps
+start-dfs.sh
+start-yarn.sh
+hdfs dfs -mkdir /practice
+hdfs dfs -put /home/hadoop/test.txt /practice
+
+yarn jar /home/hadoop/hadoop-3.3.5/share/hadoop/mapreduce/hadoop-mapreduce-examples-
+3.3.5.jar wordcount /practice/test.txt /outputpractice
+hdfs dfs -cat /outputpractice/part-r-00000
+
+
+#scala
+spark-shell
+var x = sc.textFile("/home/pict/input.txt")
+var y = x.flatMap(_.split(" "))
+var z = y.map((_,1))
+var w = z.reduceBykey(_+_)
+w.saveAsTextFile("output2.txt")
+w.foreach(println)
+
