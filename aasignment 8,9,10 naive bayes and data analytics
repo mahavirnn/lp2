@@ -1,0 +1,134 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# column_names = ['CRIM', 'ZN', 'INDUS', 'CHAS', 'NOX', 'RM', 'AGE', 'DIS', 'RAD', 'TAX', 'PTRATIO', 'B', 'LSTAT', 'MEDV']
+# df = pd.read_csv('housing.csv', header=None, delimiter=r"\s+", names=column_names)
+# df
+
+from sklearn.datasets import load_boston
+boston = load_boston()
+
+df = pd.DataFrame(boston.data)
+df
+
+df.columns = boston.feature_names
+df
+
+df["PRICE"] = boston.target
+# Median value of owner-occupied homes in $1000s
+
+X = df.drop(["PRICE"],axis=1)
+y = df["PRICE"]
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+
+print(X_train.shape)
+print(X_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+
+lr.fit(X_train,y_train)
+# train the model using the training sets
+
+lr.intercept_
+
+coeff = pd.DataFrame([X_train.columns,lr.coef_]).T
+coeff = coeff.rename(columns={0:"Feature_name",1:"Coefficients"})
+coeff
+
+y_pred = lr.predict(X_train)
+
+from sklearn.metrics import r2_score,mean_absolute_error,mean_squared_error
+
+print("R2 Score =",r2_score(y_train,y_pred))    # 1-((sum of residual_error)^2/(sum of total error))
+print("MAE =",mean_absolute_error(y_train,y_pred))    # diff b/w two continuous variables specified in parameters
+print("MSE =",mean_squared_error(y_train,y_pred))
+print("RMSE =",np.sqrt(mean_squared_error(y_train,y_pred)))
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+X=df.drop('Purchased',axis=1)
+y=df['Purchased']
+
+X=X.drop('User ID',axis=1)
+
+X['Gender']=X['Gender'].map({'Male':0,'Female':1}).astype(int)
+
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.20, random_state=435)
+
+model=LogisticRegression()
+model.fit(X,y)
+
+model.score(X,y)    #checking accuracy on test set
+
+y_pred=model.predict(X_test)
+
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_test, y_pred)
+
+from sklearn.metrics import ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+ConfusionMatrixDisplay.from_predictions(y_test, y_pred)
+plt.show()
+
+from sklearn.metrics import recall_score, precision_score, f1_score
+prec=precision_score(y_test, y_pred)
+recall=recall_score(y_test, y_pred)
+f1=f1_score(y_test, y_pred)
+
+print("Precision:{},\nRecall:{} \n F1-Score:{}".format(prec,recall,f1))
+
+df = df.iloc[:,[1,2,3,4,5]]
+df
+
+df["SepalLengthCm"].fillna(df["SepalLengthCm"].mean(),inplace=True)
+df["SepalWidthCm"].fillna(df["SepalWidthCm"].mean(),inplace=True)
+df["PetalLengthCm"].fillna(df["PetalLengthCm"].mean(),inplace=True)
+df["PetalWidthCm"].fillna(df["PetalWidthCm"].mean(),inplace=True)
+
+
+
+#chinmay Codes
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, classification_report
+
+X = df[["sepal_length", "sepal_width", "petal_length", "petal_width"]]
+Y = df["species"]
+
+sc = StandardScaler()
+X = sc.fit_transform(X)
+
+x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+
+gaussian = GaussianNB()
+gaussian.fit(x_train, y_train)
+
+
+y_pred = gaussian.predict(x_test)
+y_pred
+
+acc = accuracy_score(y_test, y_pred)
+presn = precision_score(y_test, y_pred, average = "micro")
+recall = recall_score(y_test, y_pred, average = "micro")
+
+acc
+
+cm = confusion_matrix(y_test, y_pred)
+cm
+
+clsy_report = classification_report(y_test, y_pred)
+print(clsy_report)
+
